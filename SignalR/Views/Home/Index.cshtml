@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "Real-Time Notifications";
+}
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="~/css/notification.css" asp-append-version="true" />
+
+<div class="rtn-page">
+    <header class="rtn-header">
+        <div>
+            <h1 class="rtn-title">Real-Time Notifications</h1>
+            <p class="rtn-subtitle">
+                Notifications appear instantly on this page using SignalR, with no refresh needed.
+            </p>
+        </div>
+
+        <div id="connectionStatus" class="rtn-status rtn-status--connecting" role="status" aria-live="polite">
+            <span class="rtn-status__dot" aria-hidden="true"></span>
+            <span id="connectionStatusText">Connecting</span>
+        </div>
+    </header>
+
+    <main class="rtn-grid">
+        <!-- Send to everyone -->
+        <section class="rtn-card rtn-card--all" aria-labelledby="allHeading">
+            <h2 id="allHeading" class="rtn-card__title">Send to everyone</h2>
+            <p class="rtn-card__hint">Every connected user receives this message instantly.</p>
+
+            <div class="rtn-row">
+                <label for="allInput" class="rtn-visually-hidden">Message to everyone</label>
+                <input id="allInput" class="rtn-input" type="text" maxlength="200"
+                       placeholder="Type your notification..." autocomplete="off" />
+                <button id="allSendButton" class="rtn-button" type="button" disabled>Send Notification</button>
+            </div>
+        </section>
+
+        <!-- Groups -->
+        <section class="rtn-card rtn-card--group" aria-labelledby="groupHeading">
+            <h2 id="groupHeading" class="rtn-card__title">Groups</h2>
+            <p class="rtn-card__hint">Join a group, then send messages only to its members.</p>
+
+            <div class="rtn-row">
+                <label for="groupNameInput" class="rtn-visually-hidden">Group name</label>
+                <input id="groupNameInput" class="rtn-input" type="text" maxlength="50"
+                       placeholder="Group name" autocomplete="off" />
+                <button id="joinButton" class="rtn-button rtn-button--group" type="button" disabled>Join</button>
+            </div>
+
+            <ul id="joinedGroups" class="rtn-chips" aria-label="Joined groups"></ul>
+
+            <div class="rtn-row rtn-row--group-send">
+                <label for="groupSelect" class="rtn-visually-hidden">Group to send to</label>
+                <select id="groupSelect" class="rtn-input rtn-select" disabled>
+                    <option value="">Join a group first</option>
+                </select>
+                <label for="groupMessageInput" class="rtn-visually-hidden">Message to group</label>
+                <input id="groupMessageInput" class="rtn-input" type="text" maxlength="200"
+                       placeholder="Message for the group" autocomplete="off" disabled />
+                <button id="groupSendButton" class="rtn-button rtn-button--group" type="button" disabled>Send To Group</button>
+            </div>
+        </section>
+
+        <!-- Received notifications -->
+        <section class="rtn-card rtn-feed" aria-labelledby="feedHeading">
+            <div class="rtn-feed__head">
+                <h2 id="feedHeading" class="rtn-card__title">Received notifications</h2>
+                <span id="notificationCount" class="rtn-badge">0</span>
+            </div>
+
+            <div id="emptyState" class="rtn-empty">
+                <svg class="rtn-empty__icon" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+                </svg>
+                <p class="rtn-empty__title">No notifications yet</p>
+                <p class="rtn-empty__text">Send one above and it will show up here right away.</p>
+            </div>
+
+            <ul id="notificationList" class="rtn-list"></ul>
+        </section>
+    </main>
+</div>
+
+<!-- Popup messages appear here -->
+<div id="toastContainer" class="rtn-toasts" aria-live="polite"></div>
+
+@* Official SignalR JavaScript client (CDN) *@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+<script src="~/js/notification.js" asp-append-version="true"></script>
